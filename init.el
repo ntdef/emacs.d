@@ -74,7 +74,6 @@
 (require 'init-whitespace)
 
 (require 'init-vc)
-(require 'init-darcs)
 (require 'init-git)
 (require 'init-github)
 
@@ -87,7 +86,6 @@
 (require 'init-csv)
 (require 'init-erlang)
 (require 'init-javascript)
-(require 'init-php)
 (require 'init-org)
 (require 'init-nxml)
 (require 'init-html)
@@ -95,16 +93,7 @@
 (require 'init-haml)
 (require 'init-http)
 (require 'init-python)
-(require 'init-haskell)
-(require 'init-elm)
-(require 'init-purescript)
-(require 'init-ruby)
-(require 'init-rails)
 (require 'init-sql)
-(require 'init-ocaml)
-(require 'init-j)
-(require 'init-nim)
-(require 'init-rust)
 (require 'init-toml)
 (require 'init-yaml)
 (require 'init-docker)
@@ -115,9 +104,7 @@
 (require 'init-paredit)
 (require 'init-lisp)
 (require 'init-slime)
-(require 'init-clojure)
-(require 'init-clojure-cider)
-(require 'init-common-lisp)
+;; (require 'init-common-lisp)
 
 (when *spell-check-support-enabled*
   (require 'init-spelling))
@@ -127,8 +114,6 @@
 (require 'init-folding)
 (require 'init-dash)
 
-;;(require 'init-twitter)
-;; (require 'init-mu)
 (require 'init-ledger)
 ;; Extra packages which don't require any configuration
 
@@ -136,8 +121,10 @@
 (require-package 'gnuplot)
 (require-package 'lua-mode)
 (require-package 'htmlize)
+
 (when *is-a-mac*
   (require-package 'osx-location))
+
 (maybe-require-package 'dotenv-mode)
 (maybe-require-package 'shfmt)
 
@@ -152,12 +139,12 @@
 
 
 
-;; Allow access from emacsclient
-(add-hook 'after-init-hook
-          (lambda ()
-            (require 'server)
-            (unless (server-running-p)
-              (server-start))))
+; ;; Allow access from emacsclient
+; (add-hook 'after-init-hook
+;           (lambda ()
+;             (require 'server)
+;             (unless (server-running-p)
+;               (server-start))))
 
 ;; Variables configured via the interactive 'customize' interface
 (when (file-exists-p custom-file)
