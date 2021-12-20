@@ -382,6 +382,12 @@ ORIG is the advised function, which is called with its ARGS."
 (dolist (cmd '(default-text-scale-increase default-text-scale-decrease))
   (put cmd 'repeat-map 'default-text-scale-repeat-map))
 
+
+;; Yanking
+;; See https://karthinks.com/software/a-better-yank-pop-binding/
+
+(global-set-key [remap yank-pop] #'consult-yank-pop)
+
 
 (provide 'init-editing-utils)
 ;;; init-editing-utils.el ends here
