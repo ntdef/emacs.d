@@ -265,6 +265,34 @@ With arg N, insert N newlines."
 (global-set-key (kbd "M-j") 'join-line)
 
 
+;; upcase, downcase & capitalize configuration
+
+(defun ntdef/upcase-dwim ()
+  "Wrapper for upcase dwim"
+  (interactive)
+  (unless current-prefix-arg
+    (setq current-prefix-arg -1))
+  (call-interactively #'upcase-dwim))
+
+(defun ntdef/downcase-dwim ()
+  "Wrapper for downcase dwim"
+  (interactive)
+  (unless current-prefix-arg
+    (setq current-prefix-arg -1))
+  (call-interactively #'downcase-dwim))
+
+(defun ntdef/capitalize-dwim ()
+  "Wrapper for capitalize dwim"
+  (interactive)
+  (unless current-prefix-arg
+    (setq current-prefix-arg -1))
+  (call-interactively #'capitalize-dwim))
+
+(global-set-key [remap upcase-word     ] #'ntdef/upcase-dwim)
+(global-set-key [remap downcase-word   ] #'ntdef/downcase-dwim)
+(global-set-key [remap capitalize-word ] #'ntdef/capitalize-dwim)
+
+
 ;; Random line sorting
 (defun sanityinc/sort-lines-random (beg end)
   "Sort lines in region from BEG to END randomly."
