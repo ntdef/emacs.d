@@ -47,7 +47,13 @@
     (global-set-key [remap switch-to-buffer-other-frame] 'consult-buffer-other-frame)
     (global-set-key [remap goto-line] 'consult-goto-line)
 
+    (global-set-key (kbd "C-c m") 'consult-mode-command)
+    (global-set-key [remap repeat-complex-command] 'consult-complex-command)
 
+    ;; Register save/load keybinds
+    (global-set-key (kbd "M-'") 'consult-register-store)
+    (global-set-key (kbd "M-#") 'consult-register-load)
+    (global-set-key (kbd "C-M-#") 'consult-register)
 
     (when (maybe-require-package 'embark-consult)
       (with-eval-after-load 'embark
