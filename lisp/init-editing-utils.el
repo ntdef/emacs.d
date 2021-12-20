@@ -300,6 +300,88 @@ ORIG is the advised function, which is called with its ARGS."
 
 (advice-add 'kmacro-call-macro :around 'sanityinc/disable-features-during-macro-call)
 
+
+;; REPEAT-MODE configuration
+(repeat-mode 1)
+
+(global-set-key (kbd "M-]") #'forward-paragraph)
+(global-set-key (kbd "M-[") #'backward-paragraph)
+
+(with-eval-after-load 'repeat
+  (defvar repeat-movement-map
+    (define-keymap
+      (kbd "M-f") #'forward-word
+      (kbd "f")   #'forward-word
+      (kbd "M-b") #'backward-word
+      (kbd "b")   #'backward-word
+      (kbd "M-]") #'forward-paragraph
+      (kbd "]")   #'forward-paragraph
+      (kbd "M-[") #'backward-paragraph
+      (kbd "[")   #'backward-paragraph
+      (kbd "n")   #'next-line
+      (kbd "C-n") #'next-line
+      (kbd "p")   #'previous-line
+      (kbd "C-p") #'previous-line)
+    "My keymap.")
+  (dolist (cmd '(forward-word
+                 backward-word
+                 next-line
+                 previous-line
+                 backward-paragraph
+                 forward-paragraph
+                 ))
+    (put cmd 'repeat-map 'repeat-movement-map))
+
+  (defvar repeat-sexp-movement-map
+    (define-keymap :parent repeat-movement-map
+      (kbd "C-M-f") #'forward-sexp
+      (kbd "f")     #'forward-sexp
+      (kbd "C-M-b") #'backward-sexp
+      (kbd "b")     #'backward-sexp)
+    "A repeat sexp movement map")
+
+  (dolist (cmd '(forward-sexp backward-sexp))
+    (put cmd 'repeat-map 'repeat-sexp-movement-map))
+
+  (defvar repeat-paredit-map
+    (define-keymap
+      (kbd "C-M-u") #'paredit-backward-up
+      (kbd "u")     #'paredit-backward-up
+      (kbd "C-M-d") #'paredit-forward-down
+      (kbd "d")     #'paredit-forward-down
+      (kbd "C-M-n") #'paredit-forward-up
+      (kbd "n")     #'paredit-forward-up
+      (kbd "C-M-f") #'paredit-forward
+      (kbd "f")     #'paredit-forward
+      (kbd "C-M-b") #'paredit-backward
+      (kbd "b")     #'paredit-backward)
+    "A repeat keymap for paredit")
+
+  (dolist (cmd '(paredit-forward paredit-backward paredit-forward-up paredit-backward-down paredit-forward-down paredit-backward-up))
+    (put cmd 'repeat-map 'repeat-paredit-map))
+
+  (defun ntdef/repeat-map-ok (km)
+    (cl-labels ((frec (evt defn)
+                  (when (keymapp defn)
+                    (map-keymap #'frec defn))
+                  (when (functionp defn)
+                    (put defn 'repeat-map km))))
+      #'frec))
+  (map-keymap (ntdef/repeat-map-ok 'repeat-paredit-map) repeat-paredit-map)
+
+  )
+
+(defvar default-text-scale-repeat-map
+  (define-keymap
+    (kbd "C-M-=") #'default-text-scale-increase
+    (kbd "=")     #'default-text-scale-increase
+    (kbd "C-M--") #'default-text-scale-decrease
+    (kbd "-")     #'default-text-scale-decrease)
+  "Keymap for text scale repeat.")
+
+(dolist (cmd '(default-text-scale-increase default-text-scale-decrease))
+  (put cmd 'repeat-map 'default-text-scale-repeat-map))
+
 
 (provide 'init-editing-utils)
 ;;; init-editing-utils.el ends here
