@@ -54,4 +54,5 @@ site-lisp/package/
 /.lsp-session-v1
 /smex-items
 /eln-cache/
-init-local.el
+/lisp/init-local.el
+/dtache.db
