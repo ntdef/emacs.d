@@ -148,7 +148,16 @@
 ;; Show matching parens
 (add-hook 'after-init-hook 'show-paren-mode)
 
+
+;;; Narrowing
+(defun ntdef/narrow-dwim ()
+  "Widen region if buffer is narrowed, otherwise call `narrow-to-region'."
+  (interactive)
+  (if (buffer-narrowed-p)
+      (widen)
+    (call-interactively #'narrow-to-region)))
 
+(global-set-key (kbd "C-c n") #'ntdef/narrow-dwim)
 
 ;;; Handy key bindings
 
