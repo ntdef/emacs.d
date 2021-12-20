@@ -84,6 +84,8 @@
 (require-package 'default-text-scale)
 (add-hook 'after-init-hook 'default-text-scale-mode)
 
+(set-face-attribute 'default nil
+                    :family "JetBrains Mono")
 
 
 (require-package 'disable-mouse)
