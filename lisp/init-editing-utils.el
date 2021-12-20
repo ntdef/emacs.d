@@ -417,6 +417,11 @@ ORIG is the advised function, which is called with its ARGS."
 
 (global-set-key [remap yank-pop] #'consult-yank-pop)
 
+
+;; Scratch buffers
+
+(global-set-key (kbd "C-c s") #'scratch)
+
 
 (provide 'init-editing-utils)
 ;;; init-editing-utils.el ends here
