@@ -65,6 +65,7 @@
 (require 'init-recentf)
 (require 'init-minibuffer)
 (require 'init-company)
+(require 'init-embark)
 (require 'init-windows)
 (require 'init-sessions)
 (require 'init-mmm)

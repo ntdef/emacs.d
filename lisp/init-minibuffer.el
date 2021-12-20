@@ -14,10 +14,6 @@
     (setq-local completion-styles '(substring orderless)))
   (add-hook 'minibuffer-setup-hook 'sanityinc/use-orderless-in-minibuffer)
 
-  (when (maybe-require-package 'embark)
-    (with-eval-after-load 'vertico
-      (define-key vertico-map (kbd "C-c C-o") 'embark-export)
-      (define-key vertico-map (kbd "C-c C-c") 'embark-act)))
 
   (when (maybe-require-package 'consult)
     (defmacro sanityinc/no-consult-preview (&rest cmds)
@@ -54,11 +50,6 @@
     (global-set-key (kbd "M-'") 'consult-register-store)
     (global-set-key (kbd "M-#") 'consult-register-load)
     (global-set-key (kbd "C-M-#") 'consult-register)
-
-    (when (maybe-require-package 'embark-consult)
-      (with-eval-after-load 'embark
-        (require 'embark-consult)
-        (add-hook 'embark-collect-mode-hook 'embark-consult-preview-minor-mode)))
 
     (maybe-require-package 'consult-flycheck)))
 
