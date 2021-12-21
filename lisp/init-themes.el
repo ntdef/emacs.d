@@ -12,6 +12,13 @@
 ;; If you don't customize it, this is the theme you get.
 (setq-default custom-enabled-themes '(sanityinc-tomorrow-bright))
 
+
+;; Ensure themes are unloaded before switching themes
+(define-advice load-theme (:before (&rest _args) theme-dont-propagate)
+  "Discard all themes before loading new."
+  (mapc #'disable-theme custom-enabled-themes))
+
+
 ;; Ensure that themes will be applied even if they have not been customized
 (defun reapply-themes ()
   "Forcibly load the themes listed in `custom-enabled-themes'."
