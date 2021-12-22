@@ -150,6 +150,7 @@
 
 
 ;;; Narrowing
+
 (defun ntdef/narrow-dwim ()
   "Widen region if buffer is narrowed, otherwise call `narrow-to-region'."
   (interactive)
@@ -158,19 +159,35 @@
     (call-interactively #'narrow-to-region)))
 
 (global-set-key (kbd "C-c n") #'ntdef/narrow-dwim)
+
+
+;;; AVY configuration
+
+(when (maybe-require-package 'avy)
+  (defun avy-action-embark (pt)
+    "See https://karthinks.com/software/avy-can-do-anything/#avy-plus-embark-any-action-anywhere."
+    (unwind-protect
+        (save-excursion
+          (goto-char pt)
+          (embark-act))
+      (select-windowq
+       (cdr (ring-ref avy-ring 0))))
+    t)
+
+  (setf (alist-get ?. avy-dispatch-alist) 'avy-action-embark)
+
+  (defun ntdef/avy-goto-char ()
+    (interactive)
+    (let ((avy-action 'avy-action-embark))
+      (call-interactively #'avy-goto-char)))
+
+  (global-set-key (kbd "C-,") 'avy-goto-char-timer))
+
 
 ;;; Handy key bindings
 
 (global-set-key (kbd "C-.") 'set-mark-command)
 (global-set-key (kbd "C-x C-.") 'pop-global-mark)
-
-(when (maybe-require-package 'avy)
-  (global-set-key (kbd "C-;") 'avy-goto-char-timer))
-
-
-;; Train myself to use M-f and M-b instead
-(global-unset-key [M-left])
-(global-unset-key [M-right])
 
 (defun kill-back-to-indentation ()
   "Kill from point back to the first non-whitespace character on the line."
