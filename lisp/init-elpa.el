@@ -65,6 +65,7 @@ locate PACKAGE."
 
 
 ;;; Setup use-package.el for some configuration that uses it
+;;; See https://jeffkreeftmeijer.com/emacs-straight-use-package/
 (eval-when-compile
   (require-package 'use-package))
 
