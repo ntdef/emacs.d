@@ -64,6 +64,14 @@ locate PACKAGE."
 (package-initialize)
 
 
+;;; Setup use-package.el for some configuration that uses it
+(eval-when-compile
+  (require-package 'use-package))
+
+(use-package use-package-ensure-system-package
+  :ensure t)
+
+
 ;; package.el updates the saved version of package-selected-packages correctly only
 ;; after custom-file has been loaded, which is a bug. We work around this by adding
 ;; the required packages to package-selected-packages after startup is complete.
