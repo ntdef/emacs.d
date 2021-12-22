@@ -418,6 +418,62 @@ ORIG is the advised function, which is called with its ARGS."
 (global-set-key [remap yank-pop] #'consult-yank-pop)
 
 
+;; Commands for manipulating shell args
+;;
+;; see https://xenodium.com/emacs-quote-wrap-all-in-region/
+;; FIXME Note that there's probably a better way to do this with insert-pair
+;; TODO See https://emacs.stackexchange.com/questions/45798/split-command-line-into-a-list-of-arguments
+;; TODO See also https://emacs.stackexchange.com/questions/32077/how-to-programmatically-surround-a-string-with-escaped-double-quotes
+(defun ntdef/toggle-quote-wrap-all-in-region (beg end)
+  "Toggle wrapping all items in region with double quotes."
+  (interactive (list (mark) (point)))
+  (unless (region-active-p)
+    (user-error "no region to wrap"))
+  (let ((deactivate-mark nil)
+        (replacement (string-join
+                      (mapcar (lambda (item)
+                                (if (string-match-p "^\".*\"$" item)
+                                    (string-trim item "\"" "\"")
+                                  (format "\"%s\"" item)))
+                              (split-string (buffer-substring beg end)))
+                      " ")))
+    (delete-region beg end)
+    (insert replacement)))
+
+(defun ntdef/--wrap-each (arg)          ; FIXME
+  (interactive "p")
+  ;; (re-search-forward "[^ \t\n]+")
+  ;; (replace-match "\"\\&\"")
+  (while (and (> arg 0) (re-search-forward "[^ \t\n]+"))
+    (replace-match "\"\\&\"")
+    (setq arg (1- arg))))
+
+(defun ntdef/--wrap-quote (beg end)     ; FIXME
+  (interactive "r")
+  (replace-region-contents beg end
+                           (lambda ()
+                             (when-let (arr (split-string-shell-command))
+                               (delete-region (point-min) (point-max))
+                               (dolist (el arr)
+                                 (insert-pair)
+                                 (insert arr)
+                                 ))
+                             (seq-mapcat #'shell-quote-argument
+                                         (split-string-and-unquote (buffer-string))
+                                         'string))))
+
+(defun ntdef/--wrap-quote (beg end)     ; FIXME
+  (interactive "r")
+  (replace-region-contents beg end
+                           (lambda ()
+                             (combine-and-quote-strings))))
+;; "one" "two" "three"
+
+;; (combine-and-quote-strings (mapcar #'prin1-to-string (split-string-and-unquote "\"--one\" \"--two\" \"--three\"")))
+
+;; (combine-and-quote-strings '("one four" "two" "--three" "\"first\""))
+
+
 ;; Scratch buffers
 
 (global-set-key (kbd "C-c s") #'scratch)
