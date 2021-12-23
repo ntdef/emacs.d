@@ -108,6 +108,85 @@ Call a second time to restore the original window configuration."
   (add-hook 'after-init-hook (apply-partially 'windmove-default-keybindings 'control))
   (add-hook 'after-init-hook (apply-partially 'windswap-default-keybindings 'shift 'control)))
 
+
+;;; Setup `display-buffer-alist'
+;; copied from https://protesilaos.com/emacs/dotemacs
+(setq display-buffer-alist
+      `(;; no window
+        ("\\`\\*Async Shell Command\\*\\'"
+         (display-buffer-no-window))
+        ;; top side window
+        ("\\*\\(Flymake diagnostics\\|Package-Lint\\).*"
+         (display-buffer-in-side-window)
+         (window-height . 0.16)
+         (side . top)
+         (slot . 0))
+        ("\\*Messages.*"
+         (display-buffer-in-side-window)
+         (window-height . 0.16)
+         (side . top)
+         (slot . 1))
+        ("\\*\\(Backtrace\\|Warnings\\|Compile-Log\\|Flymake log\\)\\*"
+         (display-buffer-in-side-window)
+         (window-height . 0.16)
+         (side . top)
+         (slot . 2))
+        ;; left side window
+        ("\\*\\(.* # Help.*\\|Help\\)\\*" ; See the hooks for `visual-line-mode'
+         (display-buffer-reuse-mode-window display-buffer-in-side-window)
+         (window-width . 0.25)
+         (side . left)
+         (slot . 0))
+        ;; right side window
+        ("\\*keycast\\*"
+         (display-buffer-in-side-window)
+         (dedicated . t)
+         (window-width . 0.25)
+         (side . right)
+         (slot . -1)
+         (window-parameters . ((no-other-window . t)
+                               (mode-line-format . none))))
+        ;; bottom side window
+        ("\\*Org Select\\*"
+         (display-buffer-in-side-window)
+         (dedicated . t)
+         (side . bottom)
+         (slot . 0)
+         (window-parameters . ((mode-line-format . none))))
+        ;; bottom buffer (NOT side window)
+        ("\\*Embark Actions\\*"
+         (display-buffer-reuse-mode-window display-buffer-at-bottom)
+         (window-height . fit-window-to-buffer)
+         (window-parameters . ((no-other-window . t)
+                               (mode-line-format . none))))
+        ("\\*\\(Embark\\)?.*Completions.*"
+         (display-buffer-reuse-mode-window display-buffer-at-bottom)
+         (window-parameters . ((no-other-window . t))))
+        ("\\*\\(Output\\|Register Preview\\).*"
+         (display-buffer-reuse-mode-window display-buffer-at-bottom))
+        ;; below current window
+        ("\\*.*\\(e?shell\\|v?term\\).*"
+         (display-buffer-in-side-window)
+         (dedicatd . t)
+         (window-height 0.25)
+         (side . bottom)
+         (slot . 0))
+        ("\\*\\vc-\\(incoming\\|outgoing\\|git : \\).*"
+         (display-buffer-reuse-mode-window display-buffer-below-selected)
+         ;; NOTE 2021-10-06: we cannot `fit-window-to-buffer' because
+         ;; the height is not known in advance.
+         (window-height . 0.2))
+        ("\\*\\(Calendar\\|Bookmark Annotation\\).*"
+         (display-buffer-reuse-mode-window display-buffer-below-selected)
+         (window-height . fit-window-to-buffer))))
+
+(setq window-combination-resize t)
+(setq even-window-sizes 'height-only)
+(setq window-sides-vertical nil)
+(setq switch-to-buffer-in-dedicated-window 'pop)
+
+(add-hook 'help-mode-hook #'visual-line-mode)
+(add-hook 'custom-mode-hook #'visual-line-mode)
 
 (provide 'init-windows)
 ;;; init-windows.el ends here
