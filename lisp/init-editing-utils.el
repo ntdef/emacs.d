@@ -174,7 +174,8 @@
        (cdr (ring-ref avy-ring 0))))
     t)
 
-  (setf (alist-get ?. avy-dispatch-alist) 'avy-action-embark)
+  (with-eval-after-load 'avy
+    (setf (alist-get ?. avy-dispatch-alist) 'avy-action-embark))
 
   (defun ntdef/avy-goto-char ()
     (interactive)
